@@ -1,0 +1,589 @@
+openapi: 3.0.3
+
+info:
+  title: 工芸品管理システムAPI
+  version: 1.0.0
+  description: |
+    **Change Log** 
+    | ver. | 変更箇所 | 日付 | 変更者 |
+    | :-: | :-: | :-: | :-: |
+    | 1.0.0 | 初版作成 | 2023/07/29 | Zhong.Houji |
+
+    **Servers**  
+    | 環境 | Url |
+    | :- | :- |
+    | local | http://localhost:3000 |
+    | dev | http://sample.com |
+
+servers:
+  - url: http://localhost:3000
+    description: ローカル環境
+  - url: http://sample.com
+    description: 本番環境
+
+tags:
+  - name: Users
+    description: ユーザーに関する操作
+  - name: Crafts
+    description: 工芸品に関する操作
+
+security:
+  - ApiKey: []
+    Cookie: []
+
+paths:
+  /users:
+    post:
+      summary: ユーザー登録
+      tags: [ Users ]
+      security:
+        - ApiKey: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - username
+                - password
+              properties:
+                username:
+                  $ref: "#/components/schemas/Username"
+                password:
+                  $ref: "#/components/schemas/Password"
+      responses:
+        '201':
+          description: Created Successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/User"
+        '400':
+          $ref: "#/components/responses/400"
+        '403':
+          $ref: "#/components/responses/403"
+        '500':
+          $ref: "#/components/responses/500"
+
+    put:
+      summary: パスワード変更
+      tags: [ Users ]
+      parameters:
+        - name: userId
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                newPassword:
+                  $ref: "#/components/schemas/Password"
+      responses:
+        '200':
+          description: Successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/User"
+        '400':
+          $ref: "#/components/responses/400"
+        '403':
+          $ref: "#/components/responses/403"
+        '404':
+          $ref: "#/components/responses/404"
+        '500':
+          $ref: "#/components/responses/500"
+
+  /users/login:
+    post:
+      summary: ログイン
+      tags: [ Users ]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - username
+                - password
+              properties:
+                username:
+                  $ref: "#/components/schemas/Username"
+                password:
+                  $ref: "#/components/schemas/Password"
+      responses:
+        '200':
+          description: Successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  cookie:
+                    type: string
+                    example: example cookie
+        '400':
+          $ref: "#/components/responses/400"
+        '403':
+          $ref: "#/components/responses/403"
+        '404':
+          $ref: "#/components/responses/404"
+        '500':
+          $ref: "#/components/responses/500"
+
+  /users/:uid:
+    get:
+      summary: ユーザー情報取得
+      tags: [ Users ]
+      parameters:
+        - name: uid
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/User"
+        '400':
+          $ref: "#/components/responses/400"
+        '403':
+          $ref: "#/components/responses/403"
+        '500':
+          $ref: "#/components/responses/500"
+
+    delete:
+      summary: ユーザー削除
+      tags: [ Users ]
+      parameters:
+        - name: uid
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - username
+                - password
+              properties:
+                username:
+                  $ref: "#/components/schemas/Username"
+                password:
+                  $ref: "#/components/schemas/Password"
+      responses:
+        '204':
+          $ref: "#/components/responses/204"
+        '400':
+          $ref: "#/components/responses/400"
+        '403':
+          $ref: "#/components/responses/403"
+        '404':
+          $ref: "#/components/responses/404"
+        '500':
+          $ref: "#/components/responses/500"
+
+  /crafts:
+    post:
+      summary: 工芸品登録
+      description: 工芸品名称が重複された場合は上書き保存になる
+      tags: [ Crafts ]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - name
+                - area
+                - url
+              properties:
+                name:
+                  $ref: "#/components/schemas/CraftName"
+                area:
+                  $ref: "#/components/schemas/Area"
+                url:
+                  $ref: "#/components/schemas/Url"
+                category:
+                  $ref: "#/components/schemas/Category"
+                material:
+                  $ref: "#/components/schemas/Material"
+                atmosphere:
+                  $ref: "#/components/schemas/Atmosphere"
+                manufacturing:
+                  $ref: "#/components/schemas/Manufacturing"
+                era:
+                  $ref: "#/components/schemas/Era"
+                description:
+                  $ref: "#/components/schemas/DescriptionText"
+      responses:
+        '201':
+          description: Created Successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                  - name
+                  - area
+                  - url
+                properties:
+                  cid:
+                    $ref: "#/components/schemas/Cid"
+                  name:
+                    $ref: "#/components/schemas/CraftName"
+                  area:
+                    $ref: "#/components/schemas/Area"
+                  url:
+                    $ref: "#/components/schemas/Url"
+                  category:
+                    $ref: "#/components/schemas/Category"
+                  material:
+                    $ref: "#/components/schemas/Material"
+                  atmosphere:
+                    $ref: "#/components/schemas/Atmosphere"
+                  manufacturing:
+                    $ref: "#/components/schemas/Manufacturing"
+                  era:
+                    $ref: "#/components/schemas/Era"
+                  description:
+                    $ref: "#/components/schemas/DescriptionText"
+        '400':
+          $ref: "#/components/responses/400"
+        '403':
+          $ref: "#/components/responses/403"
+        '500':
+          $ref: "#/components/responses/500"
+
+  /crafts/:cid:
+    get:
+      summary: 工芸品詳細取得
+      description: 工芸品IDによる工芸品詳細情報を取得
+      tags: [ Crafts ]
+      parameters:
+        - name: cid
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                  - name
+                  - area
+                  - url
+                properties:
+                  cid:
+                    $ref: "#/components/schemas/Cid"
+                  name:
+                    $ref: "#/components/schemas/CraftName"
+                  area:
+                    $ref: "#/components/schemas/Area"
+                  url:
+                    $ref: "#/components/schemas/Url"
+                  category:
+                    $ref: "#/components/schemas/Category"
+                  material:
+                    $ref: "#/components/schemas/Material"
+                  atmosphere:
+                    $ref: "#/components/schemas/Atmosphere"
+                  manufacturing:
+                    $ref: "#/components/schemas/Manufacturing"
+                  era:
+                    $ref: "#/components/schemas/Era"
+                  description:
+                    $ref: "#/components/schemas/DescriptionText"
+        '400':
+          $ref: "#/components/responses/400"
+        '403':
+          $ref: "#/components/responses/403"
+        '404':
+          $ref: "#/components/responses/404"
+        '500':
+          $ref: "#/components/responses/500"
+
+  /crafts/{name}:
+    get:
+      summary: 名称で工芸品検索
+      description: 名称による工芸品基本情報を取得
+      tags: [ Crafts ]
+      parameters:
+        - name: name
+          in: query
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                  - cid
+                  - name
+                  - area
+                  - url
+                properties:
+                  cid:
+                    $ref: "#/components/schemas/Cid"
+                  name:
+                    $ref: "#/components/schemas/CraftName"
+                  area:
+                    $ref: "#/components/schemas/Area"
+                  url:
+                    $ref: "#/components/schemas/Url"
+        '400':
+          $ref: "#/components/responses/400"
+        '403':
+          $ref: "#/components/responses/403"
+        '404':
+          $ref: "#/components/responses/404"
+        '500':
+          $ref: "#/components/responses/500"
+
+  /crafts/{area}:
+    get:
+      summary: 地域で工芸品検索
+      description: 地域による工芸品基本情報を取得
+      tags: [ Crafts ]
+      parameters:
+        - name: area
+          in: query
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Successfully
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  required:
+                    - cid
+                    - name
+                    - area
+                    - url
+                  properties:
+                    cid:
+                      $ref: "#/components/schemas/Cid"
+                    name:
+                      $ref: "#/components/schemas/CraftName"
+                    area:
+                      $ref: "#/components/schemas/Area"
+                    url:
+                      $ref: "#/components/schemas/Url"
+        '400':
+          $ref: "#/components/responses/400"
+        '403':
+          $ref: "#/components/responses/403"
+        '500':
+          $ref: "#/components/responses/500"
+
+  /crafts/{era}:
+    get:
+      summary: 年代で工芸品検索
+      description: 年代による工芸品基本情報を取得
+      tags: [ Crafts ]
+      parameters:
+        - name: era
+          in: query
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Successfully
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  required:
+                    - cid
+                    - name
+                    - area
+                    - url
+                  properties:
+                    cid:
+                      $ref: "#/components/schemas/Cid"
+                    name:
+                      $ref: "#/components/schemas/CraftName"
+                    area:
+                      $ref: "#/components/schemas/Area"
+                    url:
+                      $ref: "#/components/schemas/Url"
+        '400':
+          $ref: "#/components/responses/400"
+        '403':
+          $ref: "#/components/responses/403"
+        '500':
+          $ref: "#/components/responses/500"
+
+components:
+  securitySchemes:
+    ApiKey:
+      description: "API key authorization"
+      type: apiKey
+      in: header
+      name: X-Api-Key
+    Cookie:
+      description: "Cookie authorization"
+      type: apiKey
+      in: cookie
+      name: Cookie
+
+  responses:
+    '201':
+      description: Created Successfully
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+                example: Created Successfully
+    '204':
+      description: Deleted Successfully
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+                example: Deleted Successfully
+    '400':
+      description: 400 Bad Request
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+                example: Bad Request
+    '403':
+      description: 403 Forbidden
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+                example: Forbidden
+    '404':
+      description: 404 Not Found
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+                example: Not Found
+    '500':
+      description: 500 Internal Server Error
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+                example: Internal Server Error
+
+  schemas:
+    Uid:
+      description: ユーザーID
+      type: integer
+      example: 1
+    Username:
+      description: ユーザー名称
+      type: string
+      example: zhuzhu
+    Password: 
+      description: パスワード
+      type: string
+      example: password
+    User:
+      type: object
+      required:
+        - uid
+        - username
+        - password
+      properties:
+        uid:
+          $ref: "#/components/schemas/Uid"
+        username:
+          $ref: "#/components/schemas/Username"
+        password:
+          $ref: "#/components/schemas/Password"
+
+    Cid:
+      description: 工芸品ID
+      type: integer
+      example: 1
+    CraftName:
+      description: 工芸品名称
+      type: string
+      example: TBD
+    Area:
+      description: 工芸品地域
+      type: string
+      example: TBD
+    Url:
+      description: 工芸品紹介URL
+      type: string
+      example: TBD
+    Category:
+      description: 工芸品カテゴリー
+      type: string
+      example: TBD
+    Material:
+      description: 工芸品材質
+      type: string
+      example: TBD
+    Atmosphere:
+      description: 工芸品雰囲気
+      type: string
+      example: TBD
+    Manufacturing:
+      description: 工芸品製造プロセス
+      type: string
+      example: TBD
+    Era:
+      description: 工芸品年代
+      type: string
+      example: TBD
+    DescriptionText:
+      description: 工芸品説明文
+      type: string
+      example: TBD
