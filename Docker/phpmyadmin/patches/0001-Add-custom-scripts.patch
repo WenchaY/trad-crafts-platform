@@ -1,0 +1,102 @@
+--- a/libraries/classes/Header.php
++++ b/libraries/classes/Header.php
+@@ -205,6 +205,9 @@
+             $this->scripts->addFile('shortcuts_handler.js');
+         }
+         $this->scripts->addCode($this->getJsParamsCode());
++
++        // add custom scripts
++        $this->scripts->addFile('custom_user.js');
+     }
+
+     /**
+--- /dev/null
++++ b/js/dist/custom_user.js
+@@ -0,0 +1,87 @@
++/*
++ * custom_user.js
++ */
++
++function add_hostname() {
++  var isDevEnv = (location.hostname == 'localhost');
++
++  // generate hostname element
++  var hostElem = document.createElement("div");
++  hostElem.innerHTML = `HOST: ${location.hostname}`;
++  hostElem.style.textAlign = "center";
++  if (!isDevEnv) {
++    hostElem.style.color = "red";
++    hostElem.style.fontWeight = "bold";
++  }
++
++  // append next to logo element
++  var logoElem = document.getElementById("pmalogo");
++  if (logoElem) {
++    logoElem.parentElement.insertBefore(hostElem, logoElem.nextElementSibling);
++  }
++
++  // add production env styles
++  var prodStyles = `
++    #loginform {
++      background: #fff1a0;
++    }
++    #pma_navigation_header {
++      /* background-color: gold; */
++    }
++    body,
++    #pma_navigation,
++    #pma_navigation_tree_content li {
++      background: #fff1a0;
++    }
++    #page_content .confirmation legend:after,
++    #page_content form .card-header:after,
++    #importmain h2:after,
++    #inline_editor_outer:before {
++      content: "\\AYou are trying to execute query in \\"${location.hostname}\\". Is it OK ?";
++      white-space: pre;
++      color: red;
++      background: gold;
++      font-size: 20px;
++    }
++    #page_content .edit,
++    #page_content .drop,
++    #page_content .truncate_table_anchor,
++    #page_content .drop_table_anchor,
++    #page_content .delete_row {
++      pointer-events: none;
++      user-select: none;
++      color: darkgray;
++      display: block;
++    }
++    #page_content .edit img,
++    #page_content .drop img,
++    #page_content .truncate_table_anchor img,
++    #page_content .drop_table_anchor img,
++    #page_content .delete_row img {
++      filter: grayscale(100%);
++    }
++  `
++  if (!isDevEnv) {
++    var styleElem = document.createElement("style");
++    styleElem.type = "text/css";
++    styleElem.innerHTML = prodStyles;
++    document.head.appendChild(styleElem);
++  }
++}
++
++function modify_export_setting() {
++  var exportWayElem = document.getElementById("radio_custom_export");
++  if (exportWayElem) {
++    exportWayElem.click();
++  }
++
++  var exportUtcTimeCnvElem = document.getElementById("checkbox_sql_utc_time");
++  if (exportUtcTimeCnvElem) {
++    exportUtcTimeCnvElem.click();
++  }
++}
++
++window.addEventListener('DOMContentLoaded', (event) => {
++  add_hostname();
++  setTimeout(modify_export_setting, 1000);
++});
