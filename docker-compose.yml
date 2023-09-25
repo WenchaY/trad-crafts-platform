@@ -1,0 +1,88 @@
+version: "3"
+
+volumes:
+  phpmyadmin-static:
+
+networks:
+  docker-network:
+
+services:
+  #
+  # Mysql DB
+  #
+  mysql:
+    image: mysql
+    volumes:
+      - ./docker/mysql/sql:/docker-entrypoint-initdb.d # 初期データ
+      - ./docker/mysql/my.cnf:/etc/mysql/conf.d/my.cnf # 設定ファイル
+    networks:
+      - docker-network
+    environment:
+      TZ: ${COMMON_TIMEZONE:-Asia/Tokyo}
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD:-root}
+    ports:
+      - "3306:3306"
+
+  #
+  # DB管理ツール
+  #
+  phpmyadmin:
+    build: ./Docker/phpmyadmin
+    volumes:
+      - phpmyadmin-static:/var/www/html
+      - ./docker/phpmyadmin/config.user.inc.php:/etc/phpmyadmin/config.user.inc.php
+    networks:
+      - docker-network
+    environment:
+      TZ: ${COMMON_TIMEZONE:-Asia/Tokyo}
+      PMA_ARBITRARY: 1
+      PMA_HOST: mysql
+      PMA_USER: root
+      PMA_PASSWORD: root
+    depends_on:
+      - mysql
+    ports:
+      - "3000:80"
+
+  #
+  # APIサーバー
+  #
+  api-server:
+    build:
+      context: .
+      dockerfile: ./Docker/api-server/Dockerfile
+    restart: always
+    volumes:
+      - ${PROJECT_API_SERVER_DIR:-./api-server}:/api-server
+    networks:
+      - docker-network
+    tty: true
+    environment:
+      TZ: ${COMMON_TIMEZONE:-Asia/Tokyo}
+    env_file:
+      - .env
+    depends_on:
+      - mysql
+    ports:
+      - "8080:8080"
+
+  #
+  # Web Application
+  #
+  # 予備
+  # web-app:
+  #   build: 
+  #     context: .
+  #     dockerfile: ./Docker/management-app/Dockerfile
+  #   volumes:
+  #     - ${PROJECT_MANAGEMENT_APP_DIR:-./management-app}:/app/management-app
+  #   stdin_open: true
+  #   networks:
+  #     - web-front
+  #   environment:
+  #     TZ: ${COMMON_TIMEZONE:-Asia/Tokyo}
+  #   env_file:
+  #     - .env
+  #   command: sh -c 'npm i && npm run docker'
+  #   depends_on:
+  #     - api-server
