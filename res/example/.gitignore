@@ -1,0 +1,5 @@
+node_modules
+.vscode
+API仕様書.html
+build
+coverage
