@@ -20,29 +20,31 @@ services:
     environment:
       TZ: ${COMMON_TIMEZONE:-Asia/Tokyo}
       MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD:-root}
+    env_file:
+      - .env.compose
     ports:
-      - "3306:3306"
+      - 3306:3306
 
   #
   # DB管理ツール
   #
   phpmyadmin:
-    build: ./Docker/phpmyadmin
-    volumes:
-      - phpmyadmin-static:/var/www/html
-      - ./docker/phpmyadmin/config.user.inc.php:/etc/phpmyadmin/config.user.inc.php
+    image: phpmyadmin/phpmyadmin
     networks:
       - docker-network
     environment:
       TZ: ${COMMON_TIMEZONE:-Asia/Tokyo}
-      PMA_ARBITRARY: 1
-      PMA_HOST: mysql
-      PMA_USER: root
-      PMA_PASSWORD: root
+      PMA_ARBITRARY: ${DB_ARBITRARY:-1}
+      PMA_HOST: ${DB_HOST:-mysql}
+      PMA_PORT: ${DB_PORT:-3306}
+      PMA_USER: ${DB_USER:-root}
+      PMA_PASSWORD: ${DB_PASSWORD:-root}
+    env_file:
+      - .env.compose
     depends_on:
       - mysql
     ports:
-      - "3000:80"
+      - 8080:80
 
   #
   # APIサーバー
@@ -60,11 +62,11 @@ services:
     environment:
       TZ: ${COMMON_TIMEZONE:-Asia/Tokyo}
     env_file:
-      - .env
+      - .env.compose
     depends_on:
       - mysql
     ports:
-      - "8080:8080"
+      - 3000:3000
 
   #
   # Web Application
@@ -73,16 +75,18 @@ services:
   # web-app:
   #   build: 
   #     context: .
-  #     dockerfile: ./Docker/management-app/Dockerfile
+  #     dockerfile: ./Docker/web-app/Dockerfile
   #   volumes:
-  #     - ${PROJECT_MANAGEMENT_APP_DIR:-./management-app}:/app/management-app
+  #     - ${PROJECT_WEB_APP_DIR:-./web-app}:/web-app
   #   stdin_open: true
   #   networks:
-  #     - web-front
+  #     - docker-network
   #   environment:
   #     TZ: ${COMMON_TIMEZONE:-Asia/Tokyo}
   #   env_file:
-  #     - .env
+  #     - .env.compose
   #   command: sh -c 'npm i && npm run docker'
   #   depends_on:
   #     - api-server
+    # ports:
+    #   - 80:80
