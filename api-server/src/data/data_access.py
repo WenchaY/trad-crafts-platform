@@ -84,3 +84,50 @@ class DatabaseAccess(metaclass=Singleton):
                     "error": err,
                 }
             )
+
+
+    def insert_user(self, account: str, password: str, nickname: str):
+        '''ユーザ情報を登録'''
+
+        try:
+            sql = "INSERT INTO users (account, password, nickname) VALUES (%s, %s, %s);"
+            data = (account, password, nickname,)
+            self.sql_execute(sql, data)
+
+        except ValueError as err:
+            logger.error(
+                {
+                    "tag": "DB",
+                    "type": "method",
+                    "message": "Method value error",
+                    "error": err,
+                }
+            )
+
+
+    def select_user_by_account(self, account: str) -> list:
+        """
+        ユーザーログインアカウントでユーザー情報を取得
+        
+        Args:
+            account (str): ユーザーのログインアカウント
+
+        Returns:
+            list: DB取得結果のList
+        """
+
+        try:
+            sql = "SELECT * FROM users WHERE account=%s AND NOT is_deleted;"
+            data = (account,)
+            result = self.sql_query(sql, data)
+            return result
+
+        except ValueError as err:
+            logger.error(
+                {
+                    "tag": "DB",
+                    "type": "method",
+                    "message": "Method value error",
+                    "error": err,
+                }
+            )
