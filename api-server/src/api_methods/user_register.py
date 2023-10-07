@@ -34,7 +34,7 @@ def register_user(data: dict) -> ResCreateSuccess:
         # DBに接続
         data_accessor = DatabaseAccess()
 
-        # login_idが重複された場合は拒否
+        # accountが重複された場合は拒否
         result = data_accessor.select_user_by_account(account)
         if result:
             raise BadRequestError("Duplicate account")
@@ -42,8 +42,26 @@ def register_user(data: dict) -> ResCreateSuccess:
         # ユーザーをDBに登録
         data_accessor.insert_user(account, password, nickname)
 
-        # 登録成功を返す
-        return ResCreateSuccess()
+        # ユーザー登録を検証
+        result = data_accessor.select_user_by_account(account)
+        if result:
+            res_uid = result[0][0]
+            res_account = result[0][1]
+            res_nickname = result[0][3]
+            res_created_at = utils.convert_date_format(result[0][4])
+            res_updated_at = utils.convert_date_format(result[0][5])
+
+            if res_account == account:
+                # 登録成功を返す
+                return ResCreateSuccess(
+                    body={
+                        "uid": res_uid,
+                        "account": res_account,
+                        "nickname": res_nickname,
+                        "created_at": res_created_at,
+                        "updated_at": res_updated_at,
+                    }
+                )
 
     except BadRequestError as err:
         logger.warning(

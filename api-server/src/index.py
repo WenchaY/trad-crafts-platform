@@ -12,7 +12,7 @@ load_dotenv()
 app = Flask(__name__)
 
 
-# [User-001] ユーザー登録
+# [Users-001] ユーザー登録
 @app.route('/api/users', methods=["POST"])
 def route_users_post():
     body: dict = request.get_json(force=True)
