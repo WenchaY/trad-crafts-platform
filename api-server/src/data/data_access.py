@@ -117,7 +117,11 @@ class DatabaseAccess(metaclass=Singleton):
         """
 
         try:
-            sql = "SELECT * FROM users WHERE account=%s AND NOT is_deleted;"
+            sql = """
+                    SELECT uid, account, password, nickname, created_at, updated_at, is_deleted
+                    FROM users 
+                    WHERE account=%s AND NOT is_deleted;
+                """
             data = (account,)
             result = self.sql_query(sql, data)
             return result
