@@ -1,10 +1,11 @@
 import os
-from flask import Flask, request, jsonify
+from flask import Flask, request, jsonify, wrappers
 
 from models.http_codes import Response
 from api_methods.user_register import register_user
 from api_methods.user_changepwd import changepwd_user
 from api_methods.user_get_by_uid import get_user_by_uid
+from api_methods.user_login import login_user
 
 # .envファイルを読込み
 from dotenv import load_dotenv
@@ -28,11 +29,22 @@ def route_users_put():
     res: Response = changepwd_user(body)
     return jsonify(res.body), res.code
 
+# [Users-003] ユーザーログイン
+@app.route('/api/users/login', methods=["POST"])
+def route_users_login_post():
+    body: dict = request.get_json(force=True)
+    res = login_user(body)
+    if isinstance(res,wrappers.Response):
+        return res
+    else:
+        return jsonify(res.body), res.code
+
 # [Users-005] UIDでユーザー情報取得
 @app.route('/api/users/<int:uid>', methods=["GET"])
 def route_users_uid_get(uid):
     res: Response = get_user_by_uid(uid)
     return jsonify(res.body), res.code
+
 
 # Server Test
 @app.route('/', methods=["GET"])
