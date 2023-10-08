@@ -29,7 +29,7 @@ class ResSuccess(Response):
 
     code: int = ResCodes.SUCCESS.value
     body: dict = field(
-        default_factory =
+        default_factory = lambda:
         {
             "data": "example",
         }

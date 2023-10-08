@@ -137,13 +137,26 @@ class DatabaseAccess(metaclass=Singleton):
             )
 
 
-    def update_user_password(self, account: str,new_password: str):
-        '''ユーザーのパスワードを更新'''
+    def select_user_by_uid(self, uid: int) -> list:
+        """
+        UIDでユーザー情報を取得
+        
+        Args:
+            uid (int): ユーザーID
+
+        Returns:
+            list: DB取得結果のList
+        """
 
         try:
-            sql =  "UPDATE users SET password = %s WHERE account = %s;"
-            data = (new_password, account,)
-            self.sql_execute(sql, data)
+            sql = """
+                    SELECT uid, account, password, nickname, created_at, updated_at, is_deleted
+                    FROM users 
+                    WHERE uid=%s AND NOT is_deleted;
+                """
+            data = (uid,)
+            result = self.sql_query(sql, data)
+            return result
 
         except ValueError as err:
             logger.error(
