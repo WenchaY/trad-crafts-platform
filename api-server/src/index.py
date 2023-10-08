@@ -4,6 +4,7 @@ from flask import Flask, request, jsonify
 from models.http_codes import Response
 from api_methods.user_register import register_user
 from api_methods.user_changepwd import changepwd_user
+from api_methods.user_get_by_account import get_user_by_account
 from api_methods.user_get_by_uid import get_user_by_uid
 
 # .envファイルを読込み
@@ -26,6 +27,13 @@ def route_users_post():
 def route_users_put():
     body: dict = request.get_json(force=True)
     res: Response = changepwd_user(body)
+    return jsonify(res.body), res.code
+
+# [Users-004] アカウントでユーザー情報取得
+@app.route('/api/users/', methods=["GET"])
+def route_users_get():
+    account = request.args.get('account')
+    res: Response = get_user_by_account(account)
     return jsonify(res.body), res.code
 
 # [Users-005] UIDでユーザー情報取得
