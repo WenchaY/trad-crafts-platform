@@ -1,8 +1,9 @@
 {
 	"info": {
-		"_postman_id": "9664dd44-a86a-465c-aa84-9757eb78b12d",
+		"_postman_id": "c8f28848-8e65-491f-bbb1-92e5ccf093a7",
 		"name": "TradCraftsPlatform",
-		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "30090987"
 	},
 	"item": [
 		{
@@ -12,7 +13,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n    \"account\": \"test_account\",\r\n    \"password\": \"admin\",\r\n    \"nickname\": \"Admin\"\r\n}",
+					"raw": "{\r\n    \"account\": \"zhuzhu.ac\",\r\n    \"password\": \"password\",\r\n    \"nickname\": \"zhuzhu\"\r\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -31,8 +32,155 @@
 				}
 			},
 			"response": []
+		},
+		{
+			"name": "[Users-002]ユーザーパスワード変更",
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"account\": \"zhuzhu.ac\",\n    \"password\": \"password\",\n    \"new_password1\": \"passwords\",\n    \"new_password2\": \"passwords\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{URL}}/api/users",
+					"host": [
+						"{{URL}}"
+					],
+					"path": [
+						"api",
+						"users"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "[Users-003] ユーザーログイン",
+			"request": {
+				"auth": {
+					"type": "apikey"
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"account\": \"zhuzhu.ac\",\n  \"password\": \"password\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{URL}}/api/users/login",
+					"host": [
+						"{{URL}}"
+					],
+					"path": [
+						"api",
+						"users",
+						"login"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "[Users-004] アカウントでユーザー情報取得",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{URL}}/api/users/?account=zhuzhu.ac",
+					"host": [
+						"{{URL}}"
+					],
+					"path": [
+						"api",
+						"users",
+						""
+					],
+					"query": [
+						{
+							"key": "account",
+							"value": "zhuzhu.ac"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "[Users-005] UIDでユーザー情報取得",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{URL}}/api/users/:uid",
+					"host": [
+						"{{URL}}"
+					],
+					"path": [
+						"api",
+						"users",
+						":uid"
+					],
+					"variable": [
+						{
+							"key": "uid",
+							"value": "1"
+						}
+					]
+				}
+			},
+			"response": []
 		}
 	],
+	"auth": {
+		"type": "apikey",
+		"apikey": [
+			{
+				"key": "value",
+				"value": "tradcraftsplatform",
+				"type": "string"
+			},
+			{
+				"key": "key",
+				"value": "x-api-key",
+				"type": "string"
+			}
+		]
+	},
 	"event": [
 		{
 			"listen": "prerequest",
