@@ -4,6 +4,7 @@ from flask import Flask, request, jsonify, wrappers
 from models.http_codes import Response
 from api_methods.user_register import register_user
 from api_methods.user_changepwd import changepwd_user
+from api_methods.user_get_by_account import get_user_by_account
 from api_methods.user_get_by_uid import get_user_by_uid
 from api_methods.user_login import login_user
 
@@ -34,10 +35,17 @@ def route_users_put():
 def route_users_login_post():
     body: dict = request.get_json(force=True)
     res = login_user(body)
-    if isinstance(res,wrappers.Response):
+    if isinstance(res, wrappers.Response):
         return res
     else:
         return jsonify(res.body), res.code
+
+# [Users-004] アカウントでユーザー情報取得
+@app.route('/api/users/', methods=["GET"])
+def route_users_get():
+    account = request.args.get('account')
+    res: Response = get_user_by_account(account)
+    return jsonify(res.body), res.code
 
 # [Users-005] UIDでユーザー情報取得
 @app.route('/api/users/<int:uid>', methods=["GET"])
