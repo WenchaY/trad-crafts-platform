@@ -167,3 +167,35 @@ class DatabaseAccess(metaclass=Singleton):
                     "error": err,
                 }
             )
+
+
+    def delete_user_by_uid(self, uid: int) -> list:
+        """
+        でユーザー情報を削除
+        
+        Args:
+            uid (int): ユーザーID
+
+        Returns:
+            list: DB取得結果のList
+        """
+
+        try:
+            sql = """
+                    UPDATE users 
+                    SET is_deleted = 1
+                    WHERE uid = %s AND NOT is_deleted;
+                """
+            data = (uid,)
+            result = self.sql_execute(sql, data)
+            return result
+
+        except ValueError as err:
+            logger.error(
+                {
+                    "tag": "DB",
+                    "type": "method",
+                    "message": "Method value error",
+                    "error": err,
+                }
+            )

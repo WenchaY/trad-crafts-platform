@@ -13,7 +13,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n    \"account\": \"zhuzhu.ac\",\r\n    \"password\": \"password\",\r\n    \"nickname\": \"zhuzhu\"\r\n}",
+					"raw": "{\r\n    \"account\": \"zhuzhu.ae\",\r\n    \"password\": \"password\",\r\n    \"nickname\": \"zhuzhu\"\r\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -34,13 +34,13 @@
 			"response": []
 		},
 		{
-			"name": "[Users-002]ユーザーパスワード変更",
+			"name": "[Users-002] ユーザーパスワード変更",
 			"request": {
 				"method": "PUT",
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n    \"account\": \"zhuzhu.ac\",\n    \"password\": \"password\",\n    \"new_password1\": \"passwords\",\n    \"new_password2\": \"passwords\"\n}",
+					"raw": "{\n    \"account\": \"zhuzhu.ae\",\n    \"password\": \"password\",\n    \"new_password\": \"passwords\"\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -139,6 +139,40 @@
 				"body": {
 					"mode": "raw",
 					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{URL}}/api/users/:uid",
+					"host": [
+						"{{URL}}"
+					],
+					"path": [
+						"api",
+						"users",
+						":uid"
+					],
+					"variable": [
+						{
+							"key": "uid",
+							"value": "1"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "[Users-006] ユーザー情報削除",
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"account\": \"zhuzhu.ae\",\n  \"password\": \"passwords\"\n}",
 					"options": {
 						"raw": {
 							"language": "json"
