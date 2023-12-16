@@ -17,6 +17,7 @@ CREATE TABLE craft_location (
   craft_id int(10) unsigned not null auto_increment comment '工芸品　ID',
   craft_name varchar(255) not null comment '工芸品　名前',
   craft_japanese_name varchar(255) comment '工芸品　日本語名前',
+  craft_region varchar(255) comment '工芸品　地域',
   craft_url varchar(255) comment '工芸品　説明文URL',
   created_at timestamp not null default current_timestamp comment '工芸品　作成時刻', 
   updated_at timestamp not null default current_timestamp on update current_timestamp comment '工芸品　更新時刻',
@@ -26,7 +27,8 @@ CREATE TABLE craft_location (
 comment = '工芸品情報';
 
 CREATE TABLE craft_characteristic (
-  craft_id int(10) unsigned not null auto_increment comment '工芸品　ID',
+  craft_id int(10) unsigned not null comment '工芸品　ID',
+  craft_name varchar(255) comment '工芸品　名前',
   craft_description varchar(255) comment '特徴語　説明文',
   region varchar(255) comment '特徴語　地域',
   category varchar(255) comment '特徴語　品類',

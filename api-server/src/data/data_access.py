@@ -167,3 +167,53 @@ class DatabaseAccess(metaclass=Singleton):
                     "error": err,
                 }
             )
+
+
+    def select_craft_by_name(self, craft_name: str) -> list:
+        """
+        工芸品の名前で工芸品の情報を取得
+        
+        Args:
+            craft_name (str): 工芸品の名前
+
+        Returns:
+            list: DB取得結果のList
+        """
+
+        try:
+            sql = """
+                    SELECT craft_id, craft_name, craft_japanese_name, craft_region, craft_url, created_at, updated_at, is_deleted
+                    FROM craft_location 
+                    WHERE craft_name=%s AND NOT is_deleted;
+                """
+            data = (craft_name,)
+            result = self.sql_query(sql, data)
+            return result
+
+        except ValueError as err:
+            logger.error(
+                {
+                    "tag": "DB",
+                    "type": "method",
+                    "message": "Method value error",
+                    "error": err,
+                }
+            )
+
+    def insert_craft(self, craft_name: str, craft_japanese_name: str, craft_region: str, craft_url: str):
+        '''工芸品情報を登録'''
+
+        try:
+            sql = "INSERT INTO craft_location (craft_name, craft_japanese_name, craft_region, craft_url) VALUES (%s, %s, %s, %s);"
+            data = (craft_name, craft_japanese_name, craft_region, craft_url,)
+            self.sql_execute(sql, data)
+
+        except ValueError as err:
+            logger.error(
+                {
+                    "tag": "DB",
+                    "type": "method",
+                    "message": "Method value error",
+                    "error": err,
+                }
+            )
