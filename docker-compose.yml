@@ -15,6 +15,7 @@ services:
     volumes:
       - ./docker/mysql/sql:/docker-entrypoint-initdb.d # 初期データ
       - ./docker/mysql/my.cnf:/etc/mysql/conf.d/my.cnf # 設定ファイル
+      - ./docker/mysql/data:/var/lib/mysql # 保存データ
     networks:
       - docker-network
     environment:
