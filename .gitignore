@@ -158,7 +158,11 @@ cython_debug/
 #  option (not recommended) you can uncomment the following to ignore the entire idea folder.
 #.idea/
 
+.DS_Store
+
 # Node
 node_modules
 
-.DS_Store
+# Databaseのデータ保存フォルダー
+Docker/mysql/data/*
+!Docker/mysql/data/.gitkeep
