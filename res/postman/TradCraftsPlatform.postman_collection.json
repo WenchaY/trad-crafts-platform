@@ -164,6 +164,33 @@
 				}
 			},
 			"response": []
+		},
+		{
+			"name": "[Crafts-001] 工芸品登録",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"craft_name\": \"Shigaraki ware\",\r\n    \"craft_japanese_name\": \"SHIGARAKI Yaki\",\r\n    \"craft_region\": \"shigaraki\",\r\n    \"craft_url\": \"https://kougeihin.jp/en/craft/0413/\"\t\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{URL}}/api/crafts",
+					"host": [
+						"{{URL}}"
+					],
+					"path": [
+						"api",
+						"crafts"
+					]
+				}
+			},
+			"response": []
 		}
 	],
 	"auth": {
