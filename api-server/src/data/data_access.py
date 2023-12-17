@@ -167,3 +167,22 @@ class DatabaseAccess(metaclass=Singleton):
                     "error": err,
                 }
             )
+
+
+    def update_user_password(self, account: str,new_password: str):
+        '''ユーザーのパスワードを更新'''
+
+        try:
+            sql =  "UPDATE users SET password = %s WHERE account = %s;"
+            data = (new_password, account,)
+            self.sql_execute(sql, data)
+
+        except ValueError as err:
+            logger.error(
+                {
+                    "tag": "DB",
+                    "type": "method",
+                    "message": "Method value error",
+                    "error": err,
+                }
+            )
