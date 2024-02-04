@@ -7,6 +7,7 @@ from api_methods.user_changepwd import changepwd_user
 from api_methods.user_get_by_account import get_user_by_account
 from api_methods.user_get_by_uid import get_user_by_uid
 from api_methods.user_login import login_user
+from api_methods.user_delete import delete_user
 
 # .envファイルを読込み
 from dotenv import load_dotenv
@@ -51,6 +52,12 @@ def route_users_get():
 @app.route('/api/users/<int:uid>', methods=["GET"])
 def route_users_uid_get(uid):
     res: Response = get_user_by_uid(uid)
+    return jsonify(res.body), res.code
+
+# [Users-006] ユーザー情報削除
+@app.route('/api/users/<int:uid>', methods=["DELETE"])
+def route_users_uid_delete(uid):
+    res: Response = delete_user(uid)
     return jsonify(res.body), res.code
 
 
