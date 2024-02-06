@@ -324,3 +324,36 @@ class DatabaseAccess(metaclass=Singleton):
                         "error": err,
                     }
                 )
+
+
+    def select_craft_by_craft_id(self, craft_id: int) -> list:
+            """
+            工芸品のcraft_idで工芸品の情報を取得
+            
+            Args:
+                craft_id (int): 工芸品のcraft_id
+
+            Returns:
+                list: DB取得結果のList
+            """
+
+            try:
+                sql = """
+                        SELECT craft_id, name, japanese_name, url, created_at, updated_at, is_deleted
+                        FROM craft_location
+                        WHERE craft_id = %s AND NOT is_deleted;
+                    """
+                data = (craft_id,)
+                result = self.sql_query(sql, data)
+                return result
+
+
+            except ValueError as err:
+                logger.error(
+                    {
+                        "tag": "DB",
+                        "type": "method",
+                        "message": "Method value error",
+                        "error": err,
+                    }
+                )
