@@ -7,7 +7,8 @@ from api_methods.user_changepwd import changepwd_user
 from api_methods.user_get_by_account import get_user_by_account
 from api_methods.user_get_by_uid import get_user_by_uid
 from api_methods.user_login import login_user
-
+from api_methods.craft_register import register_craft
+from api_methods.craft_get_by_cid import get_craft_by_cid
 # .envファイルを読込み
 from dotenv import load_dotenv
 load_dotenv()
@@ -51,6 +52,19 @@ def route_users_get():
 @app.route('/api/users/<int:uid>', methods=["GET"])
 def route_users_uid_get(uid):
     res: Response = get_user_by_uid(uid)
+    return jsonify(res.body), res.code
+
+# [Crafts-001] 工芸品登録
+@app.route('/api/crafts', methods=["POST"])
+def route_crafts_post():
+    body: dict = request.get_json(force=True)
+    res: Response = register_craft(body)
+    return jsonify(res.body), res.code
+
+# [Crafts-002] 工芸品詳細取得
+@app.route('/api/crafts/<int:cid>', methods=["GET"])
+def route_crafts_cid_get(cid):
+    res: Response = get_craft_by_cid(cid)
     return jsonify(res.body), res.code
 
 
