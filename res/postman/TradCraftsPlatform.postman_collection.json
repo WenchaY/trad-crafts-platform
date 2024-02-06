@@ -34,13 +34,13 @@
 			"response": []
 		},
 		{
-			"name": "[Users-002]ユーザーパスワード変更",
+			"name": "[Users-002] ユーザーパスワード変更",
 			"request": {
 				"method": "PUT",
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n    \"account\": \"zhuzhu.ac\",\n    \"password\": \"password\",\n    \"new_password1\": \"passwords\",\n    \"new_password2\": \"passwords\"\n}",
+					"raw": "{\n    \"account\": \"zhuzhu.ae\",\n    \"password\": \"password\",\n    \"new_password\": \"passwords\"\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -160,6 +160,33 @@
 							"key": "uid",
 							"value": "1"
 						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "[Crafts-001] 工芸品登録",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"name\": \"Shigaraki ware\",\r\n    \"japanese_name\": \"SHIGARAKI Yaki\",\r\n    \"url\": \"https://kougeihin.jp/en/craft/0413/\",\r\n    \"description\": \"Recognized as one of the six oldest kilns in Japan, Shigaraki Yaki dates back to the making of roofing tiles for the Shigaraki Palace by Emperor Shomu during the Tenpyo era, beginning in 730.Water jars and large pots for seeds were made during the Kamakura era (1185-1333) . Then, during the following Muromachi and Momoyama eras (spanning the next 300 years) large numbers of tea bowls and other a tea ceremony articles were produced, some of which became extremely well known. With the introduction of nobori gama, the distinctive “ascending kilns,” a great number of everyday goods was produced alongside jars for tea storage. In the period from 1912 leading up to the beginning of World War II, mainly hibachi (charcoal braziers) were produced. Today, tiles, flowers vases, tableware and ornaments rooted in daily life are being produced, making the most of the qualities of the clay that they’re made of.Shigaraki Yaki includes many large pieces that use the clay to their best advantage. Because nobori gama and ana gama (a simplified climbing kiln) are used, a number of things happen during firing to produce effects unique to these wares. First of all, a natural glaze is produced when ash from the wood burned to fire the kiln melts. A random reddish pattern forms over the surface of a pot and the ash melts into a glaze on the surface. There is no decoration aside from this accident of nature. Shigaraki Yaki includes a wide range of goods including tableware, flower vases, umbrella receptacles, ornaments, plant pots and other garden implements.\",\r\n    \"region\": \"shigaraki\",\r\n    \"category\": \"ware\",\r\n    \"material\": \"pottery，kiln，wood，mottled\",\r\n    \"atmosphere\": \"finely\",\r\n    \"manufacturing\": \"clay,ash,fired,kneaded\",\r\n    \"era\": \"kamakura\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{URL}}/api/crafts",
+					"host": [
+						"{{URL}}"
+					],
+					"path": [
+						"api",
+						"crafts"
 					]
 				}
 			},

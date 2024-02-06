@@ -167,3 +167,160 @@ class DatabaseAccess(metaclass=Singleton):
                     "error": err,
                 }
             )
+
+
+    def select_craft_by_japanese_name(self, japanese_name: str) -> list:
+            """
+            工芸品の日本語名前で工芸品の情報を取得
+            
+            Args:
+                japanese_name (str): 工芸品の日本語名前
+
+            Returns:
+                list: DB取得結果のList
+            """
+
+            try:
+                sql = """
+                        SELECT craft_id, name, japanese_name, url, created_at, updated_at, is_deleted
+                        FROM craft_location
+                        WHERE japanese_name = %s AND NOT is_deleted;
+                    """
+                data = (japanese_name,)
+                result = self.sql_query(sql, data)
+                return result
+
+
+            except ValueError as err:
+                logger.error(
+                    {
+                        "tag": "DB",
+                        "type": "method",
+                        "message": "Method value error",
+                        "error": err,
+                    }
+                )
+
+
+    def select_craft_characteristic_by_craft_id(self, craft_id: int) -> list:
+            """
+            工芸品のcraft_idで工芸品の特徴語を取得
+            
+            Args:
+                craft_id (int): 工芸品のcraft_id
+
+            Returns:
+                list: DB取得結果のList
+            """
+
+            try:
+                sql = """
+                        SELECT craft_id, description, region, category, material, atmosphere, manufacturing, era
+                        FROM craft_characteristic 
+                        WHERE craft_id=%s AND NOT is_deleted;
+                    """
+                data = (craft_id,)
+                result = self.sql_query(sql, data)
+                return result
+
+
+            except ValueError as err:
+                logger.error(
+                    {
+                        "tag": "DB",
+                        "type": "method",
+                        "message": "Method value error",
+                        "error": err,
+                    }
+                )
+
+
+    def insert_craft(self, name: str, japanese_name: str, url: str):
+            '''工芸品情報を登録'''
+
+            try:
+                sql = "INSERT INTO craft_location (name, japanese_name, url) VALUES (%s, %s, %s);"
+                data = (name, japanese_name, url)
+                
+                self.sql_execute(sql, data)
+
+            except ValueError as err:
+                logger.error(
+                    {
+                        "tag": "DB",
+                        "type": "method",
+                        "message": "Method value error",
+                        "error": err,
+                    }
+                )
+
+
+    def insert_craft_characteristic(self, craft_id: int, description: str, region: str, category: str, material: str, atmosphere: str, manufacturing: str, era: str):
+            '''工芸品特徴語を登録'''
+
+            try:
+                sql = "INSERT INTO craft_characteristic (craft_id, description, region, category, material, atmosphere, manufacturing, era) VALUES (%s, %s, %s, %s, %s, %s, %s, %s);" 
+                data = (craft_id, description, region, category, material, atmosphere, manufacturing, era)
+
+                self.sql_execute(sql, data)
+
+            except ValueError as err:
+                logger.error(
+                    {
+                        "tag": "DB",
+                        "type": "method",
+                        "message": "Method value error",
+                        "error": err,
+                    }
+                )
+
+
+    def update_craft_by_japanese_name(self,  japanese_name: str, name: str, url:str) -> list:
+            """
+            工芸品の日本語名前で工芸品の情報を更新
+            
+            Args:
+                japanese_name (str): 工芸品の日本語名前
+
+            Returns:
+                list: DB取得結果のList
+            """
+
+            try:
+                sql = " UPDATE craft_location SET name = %s, url = %s WHERE japanese_name = %s AND NOT is_deleted;"
+                data = (japanese_name, name, url)
+                self.sql_execute(sql, data)
+
+
+            except ValueError as err:
+                logger.error(
+                    {
+                        "tag": "DB",
+                        "type": "method",
+                        "message": "Method value error",
+                        "error": err,
+                    }
+                )
+
+
+    def update_craft_characteristic(self, craft_id: int, description: str, region: str, category: str, material: str, atmosphere: str, manufacturing: str, era: str):
+            '''工芸品特徴語を更新'''
+
+            try:
+                sql = """
+                        UPDATE craft_characteristic
+                        SET description = %s, region = %s, category = %s, material = %s, atmosphere = %s, manufacturing = %s, era = %s
+                        WHERE craft_id = %s;
+                    """
+                data = (craft_id, description, region, category, material, atmosphere, manufacturing, era)
+                self.sql_execute(sql, data)
+
+            except ValueError as err:
+                logger.error(
+                    {
+                        "tag": "DB",
+                        "type": "method",
+                        "message": "Method value error",
+                        "error": err,
+                    }
+                )
